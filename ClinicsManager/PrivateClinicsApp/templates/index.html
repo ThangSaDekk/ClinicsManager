@@ -1,0 +1,29 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Trang chủ{% endblock %}
+
+{% block content %}
+<br>
+{% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert alert-primary">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+{% endwith %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="banner">
+                <img src="/static/images/banner.jpg" alt="Clinics" class="banner-img">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+

@@ -1,0 +1,48 @@
+ body {
+            padding-top: 56px; /* Chiều cao của thanh điều hướng */
+        }
+        header {
+            background: #343a40;
+            box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #fff;
+        }
+        .navbar-toggler {
+            border: none;
+        }
+        .navbar-toggler:focus {
+            outline: none;
+        }
+        .navbar-toggler:hover .navbar-toggler-icon {
+            background-color: #ccc;
+        }
+        .navbar-nav .nav-item .nav-link {
+            color: #fff;
+            transition: color 0.3s ease-in-out;
+        }
+        .navbar-nav .nav-item .nav-link:hover {
+            color: #ffc107;
+        }
+        .banner {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .banner-img {
+            width: 100%;
+            height: auto;
+        }
+        .custom-search-input {
+        width: 300px; /* Đặt chiều dài tùy chọn */
+        }
+         .scrollable-table {
+        overflow-y: auto;
+        height: 400px;  /* Điều chỉnh độ cao tùy ý */
+        }
+

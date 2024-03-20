@@ -1,0 +1,180 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Lập phiếu Khám Bệnh{% endblock %}
+
+{% block content %}
+<br>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="alert alert-primary">
+    {% for message in messages %}
+    {{ message }}
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<div class="mt-5 mb-5 container">
+    <div class="row">
+        <!-- Biểu mẫu nhập liệu bên trái -->
+        <div class="col-md-6" style="border-right: 2px solid #dee2e6; height: 100%;">
+            <form action="/api/pay" method="get">
+                <h1>Phiếu khám bệnh</h1>
+                <div class="mb-4">
+                    <label class="form-label">1. Phiếu đăng ký</label>
+                    <input type="text" class="form-control" name="register_id" placeholder="Nhập mã phiếu đăng kí">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">2. Tên bệnh nhân</label>
+                    <input type="text" class="form-control" name="name" placeholder="Nhập tên bệnh nhân">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">3. Triệu chứng</label>
+                    <textarea class="form-control" rows="4" name="symptom"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">4. Dự đoán loại bệnh</label>
+                    <textarea class="form-control" rows="4" name="guess"></textarea>
+                </div>
+                <div class="mt-4">
+                    <h1>Toa thuốc</h1>
+                    {% if 'cart' in session %}
+                    <div class="scrollable-table">
+                        <table class="table mt-2">
+                            <thead style="background-color: #f2f2f2;">
+                            <tr>
+                                <th scope="col">Mã thuốc</th>
+                                <th scope="col">Tên thuốc</th>
+                                <th scope="col">Đơn giá</th>
+                                <th scope="col">Số lượng</th>
+                                <th scope="col"></th>
+                                <!-- Thêm các cột khác nếu cần -->
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- Thêm dòng và dữ liệu của bảng thuốc -->
+                            {% for c in session['cart'].values() %}
+                            <tr id="product{{ c.id }}">
+                                <td scope="row">{{c.id}}</td>
+                                <td>{{c.name}}</td>
+                                <td>{{c.price}}</td>
+                                <td>
+                                    <input type="number" onblur="updateCart({{ c.id }}, this)" value="{{ c.quantity }}"
+                                           class="form-control"/>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger" onclick="deleteCart({{ c.id }}, this)">&times
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="alert alert-info">
+                        <h3>Tổng số lượng: <span class="cart-counter">{{ cart_stats.total_quantity }}</span></h3>
+                        <h3>Tổng tiền: <span class="cart-amount">{{ "{:,.0f}".format(cart_stats.total_amount) }}</span>
+                            VNĐ</h3>
+                    </div>
+                    <button type="submit" onclick="pay()" class="btn btn-success">Lưu phiếu khám</button>
+                    {% else %}
+                    <div class="alert alert-info">
+                        KHÔNG có thuốc trong được kê!
+                    </div>
+                    {% endif %}
+
+                </div>
+
+            </form>
+        </div>
+
+
+        <!-- Bảng hiển thị thông tin bên phải -->
+
+        <div class="col-md-6">
+            <div>
+                <h2>Danh sách khám bệnh</h2>
+                <h5>Ngày khám: {{"{:02d}/{:02d}/{:04d}".format(date.day, date.month, date.year)}}</h5>
+                <form class="d-flex" method="get" action="/result_list">
+                    <input class="form-control me-2 custom-search-input " type="text" name="kw"
+                           placeholder="Nhập từ khóa...">
+                    <button class="btn btn-primary" type="submit">Tìm tên bệnh nhân</button>
+                </form>
+                <div class="scrollable-table">
+                    <table class="table mt-2">
+                        <thead style="background-color: #f2f2f2;">
+                        <tr>
+                            <th scope="col">STT</th>
+                            <th scope="col">Tên bệnh nhân</th>
+                            <th scope="col">Hoàn thành</th>
+                            <th scope="col">Phiếu đăng ký</th>
+                            <th scope="col">Xem bệnh án</th>
+                            <!-- Thêm các cột khác nếu cần -->
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Thêm dòng và dữ liệu của bảng thuốc -->
+                        {% for c in register_doc[::-1]:%}
+                        <tr>
+                            <td scope="row">{{loop.index}}</td>
+                            <td>{{c.noteName}}</td>
+                            <td>{{"Hoàn thành" if c.check else "Chưa hoàn thành"}}</td>
+                            <td>{{"Phiếu {:02d}".format(c.id)}}</td>
+                            <td><a class="nav-link text-primary" href="/result_list_details">&#128065;</a></td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bảng nằm bên dưới bảng thuốc -->
+            <div>
+                <h2>Danh sách thuốc</h2>
+                <form class="d-flex" method="get" action="/result_list">
+                    <input class="form-control me-2 custom-search-input " type="text" name="cat"
+                           placeholder="Nhập loại thuốc">
+                    <button class="btn btn-primary" type="submit">Tìm thuốc</button>
+                </form>
+                <form class="d-flex mt-3" method="get" action="/result_list">
+                    <input class="form-control me-2 custom-search-input " type="text" name="mw"
+                           placeholder="Nhập tên thuốc">
+                    <button class="btn btn-primary" type="submit">Tìm thuốc</button>
+                </form>
+                <div class="scrollable-table">
+                    <table class="table mt-3">
+                        <thead style="background-color: #f2f2f2; ">
+                        <tr>
+                            <th scope="col">STT</th>
+                            <th scope="col">Loại thuốc</th>
+                            <th scope="col">Thuốc</th>
+                            <th scope="col">Số lượng</th>
+                            <th scope="col">Đơn vị</th>
+                            <th scope="col">Thêm</th>
+                            <!-- Thêm các cột khác nếu cần -->
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Thêm dòng và dữ liệu của bảng thuốc mới -->
+                        {% for c,p in medicine %}
+                        <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{c.medicinetype.name}}</td>
+                            <td>{{c.name}}</td>
+                            <td>{{c.amount}}</td>
+                            <td>{{c.medicineunit.name}}</td>
+                            <td><a href="javascript:;"
+                                   onclick="addToCartAndReload({{c.id}}, '{{c.name}}', {{c.unitPrice}})"
+                                   class="btn btn-danger">&#10133;</a></td>
+                            <!-- Thêm các ô dữ liệu khác nếu cần -->
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

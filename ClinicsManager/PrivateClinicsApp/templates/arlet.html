@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <script>
+  // Kiểm tra nếu biến có giá trị, thì hiển thị thông báo alert
+  {% if msg %}
+    var x = confirm("{{ msg }}");
+    if (x){
+        window.close()
+    }
+  {% endif %}
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}{% endblock %}
+    </title>
+    <!-- Thêm liên kết Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet" />
+</head>
+<body>
+{% include 'layout/header.html' %}
+{% block content %}
+{% endblock %}
+
+
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Đăng ký khám bệnh</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="registrationForm" action="/register" method="get">
+          <div class="mb-3">
+            <label for="registrationDate" class="form-label">Ngày đăng ký</label>
+            <input type="date" class="form-control" id="registrationDate" min="{{tomorrow}}" name="registerDate">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Phí khám bệnh: <span>{{"{:,.0f}".format(fee)}}</span> VNĐ </label>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            <button type="button" class="btn btn-primary" onclick="showConfirmationModal()">Đăng ký</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmationModalLabel">Xác nhận đăng ký</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Bạn có chắc chắn muốn đăng ký không?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-primary" onclick="submitForm()">Xác nhận</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% include 'layout/footer.html' %}
+<script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+<script>
+  // Hàm để hiển thị hộp thoại xác nhận
+  function showConfirmationModal() {
+    var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+    confirmationModal.show();
+  }
+
+  // Hàm để gửi biểu mẫu và đóng cả hai modal
+  function submitForm() {
+    // Bạn có thể thêm logic bổ sung ở đây nếu cần
+    document.getElementById('registrationForm').submit();
+    // Đóng cả hai modal
+    var myModal = new bootstrap.Modal(document.getElementById('myModal'));
+    myModal.hide();
+    var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+    confirmationModal.hide();
+  }
+</script>
+<script>
+    function openLinkInNewWindow() {
+        // Đường dẫn của liên kết mà bạn muốn mở
+        var linkUrl = '/payment';
+
+        // Kích thước và vị trí của cửa sổ mới
+        var windowFeatures = 'width=600,height=1500,top=600,left=1000';
+
+        // Mở liên kết trong một cửa sổ mới
+        window.open(linkUrl, '_blank', windowFeatures);
+    }
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>

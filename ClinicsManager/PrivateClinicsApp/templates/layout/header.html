@@ -1,0 +1,44 @@
+<header class="navbar navbar-expand-lg fixed-top navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">TRANG CHỦ</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if current_user.is_authenticated and current_user.role == UserRole.CUSTOMER %}
+                    <li class="nav-item"><a class="nav-link" href="/result_list_details">Phiếu khám</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/register_list">Phiếu đăng ký</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#myModal">Đăng ký khám bệnh</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Chào {{current_user.name}} !!</a></li>
+                    {% endif %}
+                    {% if current_user.is_authenticated and current_user.role == UserRole.ADMIN %}
+                    <li class="nav-item"><a class="nav-link" href="#">Chào ADMIN !!</a></li>
+                    {% endif %}
+                    {% if current_user.is_authenticated and current_user.role == UserRole.NURSE %}
+                    <li class="nav-item"><a class="nav-link" href="/register_list">Lập lịch khám</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Chào Y Tá {{current_user.name}} !!</a></li>
+                    {% endif %}
+                    {% if current_user.is_authenticated and current_user.role == UserRole.DOCTOR %}
+                    <li class="nav-item"><a class="nav-link" href="/result_list_details">Phiếu khám</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/result_list">Lập phiếu khám</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/register_list">Phiếu đăng ký</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Chào Bác Sĩ {{current_user.name}} !!</a></li>
+                    {% endif %}
+                    {% if current_user.is_authenticated and current_user.role == UserRole.CASHIER %}
+                    <li class="nav-item"><a class="nav-link" href="/bill">Hóa đơn</a></li>
+                    <li class="nav-item" onclick="openLinkInNewWindow()"><a class="nav-link" >Thanh toán</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/result_list_details">Phiếu khám</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Chào Thu Ngân {{current_user.name}} !!</a></li>
+                    {% endif %}
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="/logout">Đăng xuất</a></li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="/login">Đăng ký lịch khám ngay</a></li>
+                    {% endif %}
+
+                </ul>
+            </div>
+        </div>
+</header>

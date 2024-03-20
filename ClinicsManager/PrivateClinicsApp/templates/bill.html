@@ -1,0 +1,66 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Danh sách hóa đơn{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Danh sách hóa đơn</h1>
+
+    <form action="/bill" method="get" class="mb-4">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <div class="mb-2">
+                    <label for="fromDate" class="form-label me-2">Từ ngày:</label>
+                    <input class="form-control" type="date" id="fromDate" name="fromDate">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-2">
+                    <label for="toDate" class="form-label me-2">Đến ngày:</label>
+                    <input class="form-control" type="date" id="toDate" name="toDate">
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <div class="mb-2">
+                    <label for="fromTotal" class="form-label me-2">Từ tổng:</label>
+                    <input class="form-control" type="number" id="fromTotal" name="fromTotal">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-2">
+                    <label for="toTotal" class="form-label me-2">Đến tổng:</label>
+                    <input class="form-control" type="number" id="toTotal" name="toTotal">
+                </div>
+            </div>
+        </div>
+        <div class="mb-2">
+            <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+        </div>
+    </form>
+
+    <!-- Bảng Hóa đơn thanh toán -->
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Họ Tên</th>
+            <th scope="col">Ngày Thanh Toán</th>
+            <th scope="col">Tổng Tiền</th>
+            <th scope="col">Mã Phiếu Khám Bệnh</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for c in hoadon %}
+        <tr>
+            <td>{{ c.noteName }}</td>
+            <td>{{ c.createDate.strftime("%d-%m-%Y %H:%M:%S") }}</td>
+            <td>{{ "{:,.0f}".format(c.total) }} VND</td>
+            <td>{{ c.result_id }}</td>
+        </tr>
+        {% endfor %}
+        <!-- Thêm các dòng khác tương tự nếu cần -->
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Form Khám Bệnh</title>
+    <!-- Link đến Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Thông tin hóa đơn</h2>
+
+    <!-- Form bắt đầu từ đây -->
+     <!-- Form bắt đầu từ đây -->
+     <form action="/process_form" method="post">
+
+        <!-- Mã phiếu khám bệnh -->
+        <div class="mb-3">
+            <label for="maPhieu" class="form-label">Mã phiếu khám bệnh:</label>
+            <input type="text" class="form-control" id="maPhieu" name="maPhieu" placeholder="Nhập mã phiếu khám bệnh">
+        </div>
+
+        <!-- Tổng tiền -->
+        <div class="mb-3">
+            <label for="tongTien" class="form-label">Tổng tiền:</label>
+            <input type="text" class="form-control" id="tongTien" name="Ten" placeholder="Nhập họ và tên">
+        </div>
+
+        <!-- Nút Submit -->
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <!-- Form kết thúc ở đây -->
+
+</div>
+
+<!-- Link đến Bootstrap JS và Popper.js (được yêu cầu bởi Bootstrap) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

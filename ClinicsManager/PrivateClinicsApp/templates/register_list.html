@@ -1,0 +1,98 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Phiếu đăng ký{% endblock %}
+
+{% block content %}
+<br>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="alert alert-primary">
+    {% for message in messages %}
+    {{ message }}
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+<div class="container mt-5">
+    <h2 class="mb-4">Danh sách phiếu đăng ký</h2>
+    <div>
+        {% if current_user.is_authenticated and current_user.role == UserRole.NURSE %}
+        <form class="d-flex" method="get" action="/register_list">
+            <input class="form-control me-2 custom-search-input" type="text" name="kw" placeholder="Nhập từ khóa...">
+            <button class="btn btn-primary" type="submit">Tìm tên bệnh nhân</button>
+        </form>
+        {% endif %}
+        <form class="d-flex mt-4" method="get" action="/register_list">
+            <input class="form-control me-2 custom-search-input" type="date" name="day" placeholder="Nhập ngày..">
+            <button class="btn btn-primary" type="submit">Tìm ngày đăng ký</button>
+        </form>
+    </div>
+    <br>
+    <table class="table table-bordered">
+        <thead>
+        <tr style="background-color: grey;">
+            <th scope="col">STT</th>
+            <th scope="col">Tên bệnh nhân</th>
+            <th scope="col">Ngày đăng ký khám</th>
+            {% if current_user.is_authenticated and current_user.role == UserRole.NURSE %}
+            <th scope="col">Phiếu khám</th>
+            {% endif %}
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for c in register_doc[::-1]:%}
+        <tr>
+            <th scope="row">{{loop.index}}</th>
+            <td>{{c.noteName}}</td>
+            <td>{{"{:02d}/{:02d}/{:04d}".format(c.createDate.day, c.createDate.month, c.createDate.year)}}</td>
+            {% if current_user.is_authenticated and current_user.role == UserRole.NURSE %}
+            <td>{{c.registerlist_id}}</td>
+            {% endif %}
+
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    {% if current_user.is_authenticated and current_user.role == UserRole.NURSE %}
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+        Lập phiếu khám
+    </button>
+
+    {% endif %}
+</div>
+
+
+<br>
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Chọn Ngày</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <!-- Form -->
+                <form action="/process_register" method="get">
+                    <label for="registrationDate" class="form-label">Ngày đăng ký</label>
+                    <input type="date" class="form-control" id="registrationDate" min="{{tomorrow}}"
+                           name="registerDate">
+                    <br>
+                    <button type="submit" class="btn btn-primary">Gửi</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+

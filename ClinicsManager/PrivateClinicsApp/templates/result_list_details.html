@@ -1,0 +1,68 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Danh sách phiếu khám bệnh{% endblock %}
+
+{% block content %}
+<div class=" container mt-5">
+    <h2>Danh sách phiếu khám bệnh</h2>
+    <form class="d-flex" method="get" action="/result_list_details">
+        <input class="form-control me-2 custom-search-input" type="text" name="kw" placeholder="Nhập từ khóa...">
+        <button class="btn btn-primary" type="submit">Tìm tên bệnh nhân</button>
+    </form>
+    <form class="d-flex mt-4" method="get" action="/result_list_details">
+        <input class="form-control me-2 custom-search-input" type="date" name="day" placeholder="Nhập ngày..">
+        <button class="btn btn-primary" type="submit">Tìm ngày đăng ký</button>
+    </form>
+    {% for r in result %}
+    <div class="container mt-5" style="border: 5px solid #ddd;">
+        <h3>MÃ PHIẾU: {{ r.id }}</h3>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>Họ và tên: {{ r.noteName }}</td>
+                <td>Ngày khám: {{"{:02d}/{:02d}/{:04d}".format(r.createDate.day, r.createDate.month,
+                    r.createDate.year)}}
+                </td>
+            </tr>
+            <tr>
+                <td>Triệu chứng: {{ r.Symptom }}</td>
+                <td>Dự đoán bệnh: {{ r.Guess }}</td>
+            </tr>
+            <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+
+        <!-- Table for Medication Details -->
+        <h4>TOA THUỐC</h4>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Mã thuốc</th>
+                <th scope="col">Tên Thuốc</th>
+                <th scope="col">Đơn giá</th>
+                <th scope="col">Số lượng</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for d in r.medicine_details %}
+            <tr>
+                <td>{{ d.medicine.id }}</td>
+                <td>{{ d.medicine.name }}</td>
+                <td>{{ "{:,.0f}".format(d.medicine.unitPrice) }}</td>
+                <td>{{ d.quantity }}</td>
+            </tr>
+            <!-- Add more rows as needed -->
+            {% endfor %}
+            </tbody>
+        </table>
+        {% if current_user.role == UserRole.CASHIER %}
+        <div>
+            <h4>TÌNH TRẠNG PHIẾU KHÁM: {{"Đã thanh toán" if r.check else "Chưa thanh toán"}}</h4>
+        </div>
+        {% endif %}
+    </div>
+
+    {% endfor %}
+</div>
+<br>
+{% endblock %}
